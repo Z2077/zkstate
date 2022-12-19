@@ -51,12 +51,21 @@ await Add.compile();
 // call update() and send transaction
 console.log('build transaction and create proof...');
 let tx = await Mina.transaction({ feePayerKey: zkAppKey, fee: 0.1e9 }, () => {
-  zkApp.update();
+  /*
+  What I changed in this project: add an assert.
+  If I replace zkApp.num.get() with Field(0) or Field(1) it always fails
+  */
+  zkApp.update(zkApp.num.get());
 });
+
 await tx.prove();
 console.log('send transaction...');
 let sentTx = await tx.send();
 
+/*
+  this number always returns 0
+  */
+console.log('num: ', zkApp.num.get());
 if (sentTx.hash() !== undefined) {
   console.log(`
 Success! Update transaction sent.

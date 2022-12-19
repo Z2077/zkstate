@@ -66,12 +66,22 @@ describe('Add', () => {
 
     // update transaction
     const txn = await Mina.transaction(deployerAccount, () => {
-      zkApp.update();
+      zkApp.update(Field(1));
     });
     await txn.prove();
     await txn.send();
 
     const updatedNum = zkApp.num.get();
     expect(updatedNum).toEqual(Field(3));
+    {
+      // update transaction
+      const txn = await Mina.transaction(deployerAccount, () => {
+        zkApp.update(Field(3));
+      });
+      await txn.prove();
+      await txn.send();
+      const updatedNum = zkApp.num.get();
+      expect(updatedNum).toEqual(Field(5));
+    }
   });
 });

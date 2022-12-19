@@ -17,9 +17,10 @@ export class Add extends SmartContract {
     this.num.set(Field(1));
   }
 
-  @method update() {
+  @method update(n: Field) {
     const currentState = this.num.get();
     this.num.assertEquals(currentState); // precondition that links this.num.get() to the actual on-chain state
+    n.assertEquals(currentState);
     const newState = currentState.add(2);
     this.num.set(newState);
   }
